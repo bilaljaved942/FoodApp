@@ -1,0 +1,100 @@
+version: "3.9"
+
+services:
+  # ─── FastAPI Backend ──────────────────────────────────────────────────────
+  api:
+    build: .
+    container_name: foodapp_api
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    environment:
+      - APP_ENV=development
+      - DEBUG=True
+      - SECRET_KEY=dev-secret-key-change-in-production
+      - DATABASE_URL=postgresql+asyncpg://foodapp_user:foodapp_pass@postgres:5432/foodapp_db
+      - DATABASE_URL_SYNC=postgresql://foodapp_user:foodapp_pass@postgres:5432/foodapp_db
+      - REDIS_URL=redis://redis:6379/0
+      - FIREBASE_CREDENTIALS_PATH=./firebase-credentials.json
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY:-sk_test_placeholder}
+      - STRIPE_PUBLISHABLE_KEY=${STRIPE_PUBLISHABLE_KEY:-pk_test_placeholder}
+      - GOOGLE_MAPS_API_KEY=${GOOGLE_MAPS_API_KEY:-}
+      - DO_SPACES_KEY=${DO_SPACES_KEY:-}
+      - DO_SPACES_SECRET=${DO_SPACES_SECRET:-}
+      - DO_SPACES_BUCKET=${DO_SPACES_BUCKET:-foodapp-storage}
+      - DO_SPACES_ENDPOINT=${DO_SPACES_ENDPOINT:-https://nyc3.digitaloceanspaces.com}
+      - DO_SPACES_CDN_ENDPOINT=${DO_SPACES_CDN_ENDPOINT:-}
+      - ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - foodapp_network
+    restart: unless-stopped
+
+  # ─── PostgreSQL ────────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: foodapp_postgres
+    environment:
+      POSTGRES_USER: foodapp_user
+      POSTGRES_PASSWORD: foodapp_pass
+      POSTGRES_DB: foodapp_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U foodapp_user -d foodapp_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - foodapp_network
+    restart: unless-stopped
+
+  # ─── Redis ─────────────────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: foodapp_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - foodapp_network
+    restart: unless-stopped
+
+  # ─── Alembic Migrations (run once) ─────────────────────────────────────────
+  migrations:
+    build: .
+    container_name: foodapp_migrations
+    command: alembic upgrade head
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://foodapp_user:foodapp_pass@postgres:5432/foodapp_db
+      - DATABASE_URL_SYNC=postgresql://foodapp_user:foodapp_pass@postgres:5432/foodapp_db
+      - SECRET_KEY=dev-secret-key
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - foodapp_network
+    restart: "no"
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  foodapp_network:
+    driver: bridge

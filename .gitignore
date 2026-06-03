@@ -1,0 +1,80 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+
+# Environment
+.env
+.env.local
+.env.*.local
+*.env
+
+# Secrets & Credentials
+firebase-credentials.json
+google-services.json
+GoogleService-Info.plist
+*-adminsdk-*.json
+*.json
+!package.json
+!composer.json
+!tsconfig.json
+*.p12
+*.pem
+*.key
+
+# Database
+*.db
+*.sqlite3
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Docker
+*.log
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+coverage.xml
+
+# Flutter
+mobile/*/build/
+mobile/*/android/.gradle/
+mobile/*/android/local.properties
+mobile/*/.dart_tool/
+mobile/*/.flutter-plugins
+mobile/*/.flutter-plugins-dependencies
+mobile/*/.packages
+mobile/*/pubspec.lock
+mobile/*/ios/Pods/
+mobile/*/ios/.symlinks/
+mobile/*/ios/Flutter/ephemeral/
+mobile/*/ios/Flutter/Generated.xcconfig
+mobile/*/ios/Flutter/flutter_export_environment.sh
+mobile/*/ios/Runner/Generated.xcconfig
+mobile/*/ios/Runner/flutter_export_environment.sh
+mobile/*/ios/xcuserdata/
+
+# Node / React
+admin-panel/node_modules/
+admin-panel/dist/
+admin-panel/.env
+
+# Alembic
+backend/alembic/versions/*.py
+!backend/alembic/versions/.gitkeep

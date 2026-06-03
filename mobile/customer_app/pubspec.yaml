@@ -1,0 +1,70 @@
+name: customer_app
+description: FoodApp - Customer mobile application for food delivery.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+  flutter: '>=3.19.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # State Management
+  flutter_bloc: ^8.1.5
+  equatable: ^2.0.5
+
+  # Navigation
+  go_router: ^14.0.0
+
+  # HTTP & API
+  dio: ^5.4.3
+  retrofit: ^4.1.0
+
+  # Dependency Injection
+  get_it: ^7.7.0
+  injectable: ^2.4.1
+
+  # Firebase
+  firebase_core: ^3.1.0
+  firebase_auth: ^5.1.0
+  firebase_messaging: ^15.0.0
+  firebase_database: ^11.0.0
+
+  # Maps & Location
+  google_maps_flutter: ^2.7.0
+  geolocator: ^12.0.0
+
+  # Payments
+  flutter_stripe: ^10.1.1
+
+  # Local Storage
+  hive_flutter: ^1.1.0
+  shared_preferences: ^2.2.3
+
+  # Image
+  image_picker: ^1.1.2
+  cached_network_image: ^3.3.1
+
+  # WebSocket
+  web_socket_channel: ^3.0.1
+
+  # Utils
+  intl: ^0.19.0
+  uuid: ^4.4.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  build_runner: ^2.4.11
+  injectable_generator: ^2.4.2
+  retrofit_generator: ^8.1.0
+  json_serializable: ^6.8.0
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+  # assets and custom fonts removed temporarily for local dev build.
+  # Restore these entries and add the corresponding files under
+  # assets/ and assets/fonts/ before enabling them again.
