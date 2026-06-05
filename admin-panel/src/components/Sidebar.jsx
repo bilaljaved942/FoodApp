@@ -58,7 +58,7 @@ const NAV_ITEMS = [
   },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ isOpen, onClose }) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -68,16 +68,26 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar${isOpen ? ' sidebar--open' : ''}`}>
       {/* Brand */}
       <div className="sidebar-brand">
-        <div className="sidebar-logo">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-            <circle cx="12" cy="12" r="10" fill="#f97316" opacity="0.2"/>
-            <path d="M8 12c0-2.2 1.8-4 4-4s4 1.8 4 4-1.8 4-4 4" stroke="#f97316" strokeWidth="2.5" strokeLinecap="round"/>
-            <circle cx="12" cy="12" r="1.5" fill="#f97316"/>
-          </svg>
-          <span className="sidebar-brand-name">FoodApp</span>
+        <div className="brand-header-flex">
+          <div className="sidebar-logo">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" fill="#f97316" opacity="0.2"/>
+              <path d="M8 12c0-2.2 1.8-4 4-4s4 1.8 4 4-1.8 4-4 4" stroke="#f97316" strokeWidth="2.5" strokeLinecap="round"/>
+              <circle cx="12" cy="12" r="1.5" fill="#f97316"/>
+            </svg>
+            <span className="sidebar-brand-name">FoodApp</span>
+          </div>
+          
+          {/* Close button inside sidebar on mobile */}
+          <button className="sidebar-close-btn" onClick={onClose} title="Close Menu">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
         </div>
         <span className="sidebar-brand-badge">Super Admin</span>
       </div>
@@ -104,7 +114,7 @@ export default function Sidebar() {
       <div className="sidebar-footer">
         <div className="sidebar-user">
           <div className="sidebar-avatar">
-            {user?.name?.[0]?.toUpperCase() || 'A'}
+            {user?.name?.[0]?.toUpperCase() || 'S'}
           </div>
           <div className="sidebar-user-info">
             <span className="sidebar-user-name">{user?.name || 'Admin'}</span>
@@ -135,15 +145,23 @@ export default function Sidebar() {
         }
 
         .sidebar-brand {
-          padding: 20px 20px 16px;
+          padding: 20px;
           border-bottom: 1px solid var(--border);
           flex-shrink: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+        .brand-header-flex {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: 100%;
         }
         .sidebar-logo {
           display: flex;
           align-items: center;
           gap: 10px;
-          margin-bottom: 6px;
         }
         .sidebar-brand-name {
           font-size: 17px;
@@ -152,6 +170,7 @@ export default function Sidebar() {
           letter-spacing: -0.5px;
         }
         .sidebar-brand-badge {
+          align-self: flex-start;
           display: inline-block;
           font-size: 10px;
           font-weight: 600;
@@ -161,6 +180,10 @@ export default function Sidebar() {
           background: var(--accent-muted);
           padding: 2px 8px;
           border-radius: 99px;
+        }
+
+        .sidebar-close-btn {
+          display: none;
         }
 
         .sidebar-nav {
@@ -277,6 +300,35 @@ export default function Sidebar() {
         .sidebar-logout:hover {
           background: var(--red-muted);
           color: var(--red);
+        }
+
+        /* ── Responsiveness ── */
+        @media (max-width: 1024px) {
+          .sidebar {
+            transform: translateX(-100%);
+            transition: transform var(--transition);
+            z-index: 100;
+          }
+          .sidebar--open {
+            transform: translateX(0);
+            box-shadow: var(--shadow-lg);
+          }
+          .sidebar-close-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 6px;
+            border-radius: var(--radius-sm);
+            transition: background var(--transition), color var(--transition);
+          }
+          .sidebar-close-btn:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+          }
         }
       `}</style>
     </aside>

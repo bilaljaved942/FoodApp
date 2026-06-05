@@ -13,16 +13,35 @@ const PAGE_TITLES = {
 export default function Layout() {
   const { pathname } = useLocation();
   const meta = PAGE_TITLES[pathname] || { title: 'Admin', subtitle: '' };
+  const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsSidebarOpen(false);
+  }, [pathname]);
 
   return (
     <div className="layout">
-      <Sidebar />
+      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+      
+      {isSidebarOpen && (
+        <div className="sidebar-overlay" onClick={() => setIsSidebarOpen(false)} />
+      )}
+
       <div className="layout-main">
         {/* Top Header Bar */}
         <header className="layout-header">
           <div className="layout-header-left">
-            <h2 className="layout-header-title">{meta.title}</h2>
-            <p className="layout-header-subtitle">{meta.subtitle}</p>
+            <button className="menu-toggle-btn" onClick={() => setIsSidebarOpen(true)} title="Toggle Menu">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="18" x2="21" y2="18" />
+              </svg>
+            </button>
+            <div className="header-meta">
+              <h2 className="layout-header-title">{meta.title}</h2>
+              <p className="layout-header-subtitle">{meta.subtitle}</p>
+            </div>
           </div>
           <div className="layout-header-right">
             <div className="header-time">
@@ -76,6 +95,11 @@ export default function Layout() {
 
         .layout-header-left {
           display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+        .header-meta {
+          display: flex;
           align-items: baseline;
           gap: 12px;
         }
@@ -88,6 +112,10 @@ export default function Layout() {
         .layout-header-subtitle {
           font-size: 12.5px;
           color: var(--text-muted);
+        }
+
+        .menu-toggle-btn {
+          display: none;
         }
 
         .layout-header-right {
@@ -116,6 +144,47 @@ export default function Layout() {
         .layout-content {
           flex: 1;
           overflow-y: auto;
+        }
+
+        /* ── Responsiveness ── */
+        @media (max-width: 1024px) {
+          .layout-main {
+            margin-left: 0;
+          }
+          .layout-header {
+            padding: 0 16px;
+          }
+          .menu-toggle-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            padding: 6px;
+            border-radius: var(--radius-sm);
+            transition: background var(--transition);
+          }
+          .menu-toggle-btn:hover {
+            background: var(--bg-hover);
+          }
+          .sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 90;
+          }
+        }
+
+        @media (max-width: 600px) {
+          .layout-header-subtitle {
+            display: none;
+          }
+          .header-time {
+            display: none;
+          }
         }
       `}</style>
     </div>
