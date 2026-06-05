@@ -63,7 +63,7 @@ export default function Layout() {
           top: 0;
           z-index: 50;
           height: var(--header-height);
-          background: rgba(15, 23, 42, 0.85);
+          background: rgba(255, 255, 255, 0.85);
           backdrop-filter: blur(12px);
           border-bottom: 1px solid var(--border);
           padding: 0 32px;

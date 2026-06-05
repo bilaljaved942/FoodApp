@@ -6,6 +6,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 import 'core/di/injection.dart';
 import 'core/router/app_router.dart';
+import 'core/router/dev_navigation_overlay.dart';
 import 'core/theme/app_theme.dart';
 import 'features/auth/presentation/auth_bloc.dart';
 
@@ -45,6 +46,24 @@ class RiderApp extends StatelessWidget {
         darkTheme: AppTheme.darkTheme,
         themeMode: ThemeMode.light,
         routerConfig: AppRouter.router,
+        builder: (context, child) {
+          return Stack(
+            children: [
+              if (child != null) child,
+              const DevNavigationOverlay(
+                routes: [
+                  '/login',
+                  '/home',
+                  '/orders/available',
+                  '/orders/active',
+                  '/orders/123/map',
+                  '/earnings',
+                  '/profile',
+                ],
+              ),
+            ],
+          );
+        },
       ),
     );
   }

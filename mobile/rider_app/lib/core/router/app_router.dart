@@ -60,11 +60,7 @@ abstract class AppRouter {
   );
 
   static String? _globalRedirect(BuildContext context, GoRouterState state) {
-    final authBloc = context.read<AuthBloc>();
-    final isAuthenticated = authBloc.state is AuthAuthenticated;
-    final isOnLogin = state.matchedLocation == AppRoutes.login;
-    if (!isAuthenticated && !isOnLogin) return AppRoutes.login;
-    if (isAuthenticated && isOnLogin) return AppRoutes.home;
+    // Temporarily disabled for UI testing
     return null;
   }
 }

@@ -143,15 +143,8 @@ abstract class AppRouter {
     ),
   );
 
-  // ─── Global redirect: gate everything behind auth ─────────────────────────
   static String? _globalRedirect(BuildContext context, GoRouterState state) {
-    final authBloc = context.read<AuthBloc>();
-    final isAuthenticated = authBloc.state is AuthAuthenticated;
-    final isOnAuthPage = state.matchedLocation == AppRoutes.login ||
-        state.matchedLocation == AppRoutes.register;
-
-    if (!isAuthenticated && !isOnAuthPage) return AppRoutes.login;
-    if (isAuthenticated && isOnAuthPage) return AppRoutes.home;
+    // Temporarily disabled for UI testing
     return null;
   }
 
